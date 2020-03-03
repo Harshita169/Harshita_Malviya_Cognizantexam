@@ -1,0 +1,268 @@
+mysql> use assignment1;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> create table branch_master(branch_id varchar(6) primary key,branch_name varchar(30),branch_city varchar(30));
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> create table customer_master(customer_number varchar(6) primary key,firstname varchar(30),middlename varchar(30),lastname varchar(30),customer_city varchar(15),customer_contact_no varchar(10),occupation varchar(20),customer_date_of_birth date);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> create table loan_details(customer_number varchar(6) primary key,branch_id varchar(6),loan_amount int(7),foreign key(branch_id) references branch_master(branch_id),loan_amount int(7));
+ERROR 1060 (42S21): Duplicate column name 'loan_amount'
+mysql> create table loan_details(customer_number varchar(6), FOREIGN KEY(customer_number) REFERENCES customer_master(customer_number),branch_id varchar(6), FOREIGN KEY(branch_id) REFERENCES branch_master(branch_id),loan_amount int(7));
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CREATE TABLE account_master(account_number varchar(6) PRIMARY KEY,customer_number varchar(6), FOREIGN KEY(customer_number) REFERENCES customer_master(customer_number) , branch_id varchar(6),FOREIGN KEY(branch_id) REFERENCES branch_master(branch_id) , opening_balance int(7),account_opening_date DATE, account_type varchar(10), account_status varchar(10));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table customer_master(customer_number varchar(6) primary key,firstname varchar(30),middlename varchar(30),lastname varchar(30),customer_city varchar(15),customer_contact_no varchar(10),occupation varchar(20),customer_date_of_birth date);
+ERROR 1050 (42S01): Table 'customer_master' already exists
+mysql> create  table transaction_details(transaction_number varchar(6) primary key ,account_number varchar(6),date_of_transaction date,medium_of_transaction varchar(20),transaction_type varchar(20),transaction_amount int,foreign key (account_number) references account_master(account_number));
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> desc branch_master;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| branch_id   | varchar(6)  | NO   | PRI | NULL    |       |
+| branch_name | varchar(30) | YES  |     | NULL    |       |
+| branch_city | varchar(30) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc customer_master;
++------------------------+-------------+------+-----+---------+-------+
+| Field                  | Type        | Null | Key | Default | Extra |
++------------------------+-------------+------+-----+---------+-------+
+| customer_number        | varchar(6)  | NO   | PRI | NULL    |       |
+| firstname              | varchar(30) | YES  |     | NULL    |       |
+| middlename             | varchar(30) | YES  |     | NULL    |       |
+| lastname               | varchar(30) | YES  |     | NULL    |       |
+| customer_city          | varchar(15) | YES  |     | NULL    |       |
+| customer_contact_no    | varchar(10) | YES  |     | NULL    |       |
+| occupation             | varchar(20) | YES  |     | NULL    |       |
+| customer_date_of_birth | date        | YES  |     | NULL    |       |
++------------------------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> desc account_master;
++----------------------+-------------+------+-----+---------+-------+
+| Field                | Type        | Null | Key | Default | Extra |
++----------------------+-------------+------+-----+---------+-------+
+| account_number       | varchar(6)  | NO   | PRI | NULL    |       |
+| customer_number      | varchar(6)  | YES  | MUL | NULL    |       |
+| branch_id            | varchar(6)  | YES  | MUL | NULL    |       |
+| opening_balance      | int(7)      | YES  |     | NULL    |       |
+| account_opening_date | date        | YES  |     | NULL    |       |
+| account_type         | varchar(10) | YES  |     | NULL    |       |
+| account_status       | varchar(10) | YES  |     | NULL    |       |
++----------------------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> desc transaction_details;
++-----------------------+-------------+------+-----+---------+-------+
+| Field                 | Type        | Null | Key | Default | Extra |
++-----------------------+-------------+------+-----+---------+-------+
+| transaction_number    | varchar(6)  | NO   | PRI | NULL    |       |
+| account_number        | varchar(6)  | YES  | MUL | NULL    |       |
+| date_of_transaction   | date        | YES  |     | NULL    |       |
+| medium_of_transaction | varchar(20) | YES  |     | NULL    |       |
+| transaction_type      | varchar(20) | YES  |     | NULL    |       |
+| transaction_amount    | int(11)     | YES  |     | NULL    |       |
++-----------------------+-------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> desc loan_details;
++-----------------+------------+------+-----+---------+-------+
+| Field           | Type       | Null | Key | Default | Extra |
++-----------------+------------+------+-----+---------+-------+
+| customer_number | varchar(6) | YES  | MUL | NULL    |       |
+| branch_id       | varchar(6) | YES  | MUL | NULL    |       |
+| loan_amount     | int(7)     | YES  |     | NULL    |       |
++-----------------+------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> insert into branch_master values(1,"Harshita","Indore");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into branch_master values(2,"Sakshi","Harda");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into branch_master values(3,"Neerja","Pune");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into branch_master values(4,"Divya","Pune");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select*from branch_master;
++-----------+-------------+-------------+
+| branch_id | branch_name | branch_city |
++-----------+-------------+-------------+
+| 1         | Harshita    | Indore      |
+| 2         | Sakshi      | Harda       |
+| 3         | Neerja      | Pune        |
+| 4         | Divya       | Pune        |
++-----------+-------------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> delete table branch_master;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table branch_master' at line 1
+mysql> delete branch_master;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> delete from branch_master;
+Query OK, 4 rows affected (0.00 sec)
+
+mysql> select*from branch_master;
+Empty set (0.00 sec)
+
+mysql> insert into branch_master values(1,"Hinjewadi","Pune");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into branch_master values(2,"Wakad","Pune");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into branch_master values(3,"Kharadi","Pune");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into branch_master values(4,"Wagoli","Pune");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select*from branch_master;
++-----------+-------------+-------------+
+| branch_id | branch_name | branch_city |
++-----------+-------------+-------------+
+| 1         | Hinjewadi   | Pune        |
+| 2         | Wakad       | Pune        |
+| 3         | Kharadi     | Pune        |
+| 4         | Wagoli      | Pune        |
++-----------+-------------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into customer_master values(11,"Harshita","Ramchandra","Malviya","Indore",9926650400,"Software Engineer",1998-07-07);
+ERROR 1292 (22007): Incorrect date value: '1984' for column 'customer_date_of_birth' at row 1
+mysql> insert into customer_master values(11,"Harshita","Ramchandra","Malviya","Indore",9926650400,"Software Engineer",'1998-07-07');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into customer_master values(12,"Sakshi","Kumari","Agrawal","Harda",8226650400,"Software",'1997-06-10');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into customer_master values(13,"Divya","Shankar","Dadlani","Indore",7246650400,"Developer",'1997-12-08');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into customer_master values(14,"Mehul","Sanjay","Vani","Pune",7245650400,"Designer",'1997-08-05');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select*from customer_master;
++-----------------+-----------+------------+----------+---------------+---------------------+-------------------+------------------------+
+| customer_number | firstname | middlename | lastname | customer_city | customer_contact_no | occupation        | customer_date_of_birth |
++-----------------+-----------+------------+----------+---------------+---------------------+-------------------+------------------------+
+| 11              | Harshita  | Ramchandra | Malviya  | Indore        | 9926650400          | Software Engineer | 1998-07-07             |
+| 12              | Sakshi    | Kumari     | Agrawal  | Harda         | 8226650400          | Software          | 1997-06-10             |
+| 13              | Divya     | Shankar    | Dadlani  | Indore        | 7246650400          | Developer         | 1997-12-08             |
+| 14              | Mehul     | Sanjay     | Vani     | Pune          | 7245650400          | Designer          | 1997-08-05             |
++-----------------+-----------+------------+----------+---------------+---------------------+-------------------+------------------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into loan_details values(11,1,25000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into loan_details values(12,2,30000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into loan_details values(13,3,20000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into loan_details values(14,4,15000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select*from loan_details;
++-----------------+-----------+-------------+
+| customer_number | branch_id | loan_amount |
++-----------------+-----------+-------------+
+| 11              | 1         |       25000 |
+| 12              | 2         |       30000 |
+| 13              | 3         |       20000 |
+| 14              | 4         |       15000 |
++-----------------+-----------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> desc account_master;
++----------------------+-------------+------+-----+---------+-------+
+| Field                | Type        | Null | Key | Default | Extra |
++----------------------+-------------+------+-----+---------+-------+
+| account_number       | varchar(6)  | NO   | PRI | NULL    |       |
+| customer_number      | varchar(6)  | YES  | MUL | NULL    |       |
+| branch_id            | varchar(6)  | YES  | MUL | NULL    |       |
+| opening_balance      | int(7)      | YES  |     | NULL    |       |
+| account_opening_date | date        | YES  |     | NULL    |       |
+| account_type         | varchar(10) | YES  |     | NULL    |       |
+| account_status       | varchar(10) | YES  |     | NULL    |       |
++----------------------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> insert into loan_details values(1111,11,1,1000,'2009-06-02',"Savings","Active"),(1112,12,2,2000,'2015-02-02');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into loan_details values(1111,11,1,1000,'2009-06-02',"Savings","Active"),(1112,12,2,2000,'2015-02-02',"Salary","Active"),(1113,13,3,500,'2008-09-12',"Savings","Inactive"),(1114,14,4,3000,'2013-07-05',"Salary","Active");
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into loan_details values(1111,11,1,1000,'2009-06-02',"Savings","Active");
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into account_master values(1111,11,1,1000,'2009-06-02',"Savings","Active"),(1112,12,2,2000,'2015-02-02',"Salary","Active"),(1113,13,3,500,'2008-09-12',"Savings","Inactive"),(1114,14,4,3000,'2013-07-05',"Salary","Active");
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select* from account_master;
++----------------+-----------------+-----------+-----------------+----------------------+--------------+----------------+
+| account_number | customer_number | branch_id | opening_balance | account_opening_date | account_type | account_status |
++----------------+-----------------+-----------+-----------------+----------------------+--------------+----------------+
+| 1111           | 11              | 1         |            1000 | 2009-06-02           | Savings      | Active         |
+| 1112           | 12              | 2         |            2000 | 2015-02-02           | Salary       | Active         |
+| 1113           | 13              | 3         |             500 | 2008-09-12           | Savings      | Inactive       |
+| 1114           | 14              | 4         |            3000 | 2013-07-05           | Salary       | Active         |
++----------------+-----------------+-----------+-----------------+----------------------+--------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> select* from loan_details;
++-----------------+-----------+-------------+
+| customer_number | branch_id | loan_amount |
++-----------------+-----------+-------------+
+| 11              | 1         |       25000 |
+| 12              | 2         |       30000 |
+| 13              | 3         |       20000 |
+| 14              | 4         |       15000 |
++-----------------+-----------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into transaction_details values(11111,1111,'2020-01-04',"online","neft",20000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transaction_details values(11112,1112,'2020-01-10',"offline","neft",15000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transaction_details values(11113,1113,'2020-01-25',"online","neft",18000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into transaction_details values(11114,1114,'2020-02-28',"online","neft",35000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select* from transaction_details;
++--------------------+----------------+---------------------+-----------------------+------------------+--------------------+
+| transaction_number | account_number | date_of_transaction | medium_of_transaction | transaction_type | transaction_amount |
++--------------------+----------------+---------------------+-----------------------+------------------+--------------------+
+| 11111              | 1111           | 2020-01-04          | online                | neft             |              20000 |
+| 11112              | 1112           | 2020-01-10          | offline               | neft             |              15000 |
+| 11113              | 1113           | 2020-01-25          | online                | neft             |              18000 |
+| 11114              | 1114           | 2020-02-28          | online                | neft             |              35000 |
++--------------------+----------------+---------------------+-----------------------+------------------+--------------------+
+
+
+*************************************Queries performed********************************************************************************
+
+1. select a.account_number,c.customer_number,c.firstname,c.lastname,a.account_opening_date from account_master a,customer_master c where c.customer_number=a.customer_number order by account_number;
+
+2. select count(*) as cust_count from customer_master where customer_city='Indore';
+
+3. select a.customer_number,c.firstname,a.account_number from account_master a,customer_master c where a.customer_number=c.customer_number and day(account_opening_date)>2;
+
+4. select a.customer_number,a.account_number,c.firstname from account_master a,customer_master c where a.customer_number=c.customer_number and account_status="Active";
